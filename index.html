@@ -7,10 +7,14 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
-    <div id="devModeDiv" style="display: none;"></div>
-    <div id="bricksRemainingDiv" style="display: none;"></div>
-    <div id="elapsedTimeDiv" style="display: none;"></div>
-    <script src="script.js"></script>
+    <div class="container">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <div id="startScreen">
+            <img src="Game_Icon_Image.PNG" alt="Game Icon" id="gameIcon">
+            <p>CLICK ANYWHERE ON THE SCREEN TO START THE GAME</p>
+        </div>
+    </div>
+    <script src="sounds.js"></script>
+    <script src="game.js"></script>
 </body>
 </html>

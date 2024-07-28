@@ -23,7 +23,7 @@ const colorCyan = "#00FFFF";
 // Constants and configuration
 const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
-const BALL_SPEED = 3;
+const BALL_SPEED = 2; // Reduced ball speed
 const BALL_SIZE = 20;
 const BRICK_HEIGHT = 20;
 const BRICK_COLORS = [colorRed, colorOrange, colorYellow, colorGreen, colorCyan];
@@ -196,6 +196,7 @@ function ball_dynamics() {
         }, PADDLE_DELAY);
     }
 
+    // Detect collisions
     detect_paddle_collision();
     detect_brick_collision();
 }

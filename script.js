@@ -2,6 +2,11 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
+// Load sounds
+const paddleBounceSound = new Audio('assets/paddle_bounce.mp3');
+const wallBounceSound = new Audio('assets/wall_bounce.mp3');
+const brickBreakSound = new Audio('assets/brick_break.mp3');
+
 // Color variables
 const colorRed = "#FF0000";
 const colorOrange = "#FFA500";
@@ -22,7 +27,7 @@ const BUBBLE_DURATION = 1000; // Duration for score bubbles
 const PADDLE_DELAY = 250; // Delay in milliseconds for paddle movement in DEV_MODE 2 and 3
 const PADDLE_WIDTH = 100;
 const PADDLE_HEIGHT = 20;
-const DEV_MODE = 3; // Set the desired DEV_MODE here
+const DEV_MODE = 0; // Set the desired DEV_MODE here
 
 // Brick configuration based on DEV_MODE
 let BRICK_ROWS = 5;
@@ -155,8 +160,14 @@ function ball_dynamics() {
     ball.y += ball.dy;
 
     // Ball collision with walls
-    if (ball.x <= 0 || ball.x >= WIDTH) ball.dx = -ball.dx;
-    if (ball.y <= 0) ball.dy = -ball.dy;
+    if (ball.x <= 0 || ball.x >= WIDTH) {
+        ball.dx = -ball.dx;
+        wallBounceSound.play();
+    }
+    if (ball.y <= 0) {
+        ball.dy = -ball.dy;
+        wallBounceSound.play();
+    }
     if (ball.y >= HEIGHT) {
         gameOver = true;
         draw_end_screen("Game Over!");
@@ -189,6 +200,7 @@ function detect_paddle_collision() {
     ) {
         ball.dy = -ball.dy;
         ball.y = paddle.y - ball.size / 2;
+        paddleBounceSound.play();
     }
 }
 
@@ -212,6 +224,7 @@ function detect_brick_collision() {
 
             score += brick.points;
             add_score_bubble(brick.points, brick.color);
+            brickBreakSound.play();
 
             return false;
         }

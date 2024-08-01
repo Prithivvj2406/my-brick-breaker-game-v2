@@ -7,10 +7,20 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
-    <div id="devModeDiv" style="display: none;"></div>
-    <div id="bricksRemainingDiv" style="display: none;"></div>
-    <div id="elapsedTimeDiv" style="display: none;"></div>
-    <script src="script.js"></script>
+    <div id="start-screen">
+        <canvas id="start-canvas" width="800" height="600"></canvas>
+        <p>CLICK ANYWHERE ON THE SCREEN TO <br> START THE GAME</p>
+    </div>
+    <div id="game-screen">
+        <canvas id="game-canvas" width="800" height="600"></canvas>
+    </div>
+    <audio id="wall-bounce" src="Sounds/wall_bounce.wav"></audio>
+    <audio id="paddle-bounce" src="Sounds/paddle_bounce.wav"></audio>
+    <audio id="brick-break" src="Sounds/brick_break.wav"></audio>
+    <audio id="background-music" src="Sounds/background_music.mp3" loop></audio>
+    <audio id="startup-music" src="Sounds/startup_music.mp3" loop></audio>
+    <audio id="game-over" src="Sounds/game_over.mp3"></audio>
+    <audio id="win-game" src="Sounds/win_game.mp3"></audio>
+    <script src="scripts.js"></script>
 </body>
 </html>

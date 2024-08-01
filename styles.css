@@ -26,17 +26,3 @@ body {
     font-size: 24px;
     text-align: center;
 }
-
-#scoreBubble {
-    position: absolute;
-    right: 20px;
-    bottom: 20px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-weight: bold;
-}

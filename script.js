@@ -19,14 +19,17 @@ const BUBBLE_DURATION = 1000;
 const PADDLE_DELAY = 250;
 const PADDLE_WIDTH = 100;
 const PADDLE_HEIGHT = 20;
-const DEV_MODE = 3;
+const DEV_MODE = 1;
 
 let BRICK_ROWS = 5;
 let BRICK_COLS = 10;
 
-if (DEV_MODE === 1 || DEV_MODE === 2) {
+if (DEV_MODE === 1) {
     BRICK_ROWS = 1;
     BRICK_COLS = 5;
+} else if (DEV_MODE === 2) {
+    BRICK_ROWS = 5;
+    BRICK_COLS = 10;
 } else if (DEV_MODE === 3) {
     BRICK_ROWS = 5;
     BRICK_COLS = 10;
@@ -75,6 +78,8 @@ const gameIcon = new Image();
 gameIcon.src = "assets/Game_Icon_Image.png";
 
 const paddleHitSound = new Audio("assets/paddle_bounce.mp3");
+const wallHitSound = new Audio("assets/wall_bounce.mp3");
+const brickBreakSound = new Audio("assets/brick_break.mp3");
 
 function draw_start_screen() {
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
@@ -91,8 +96,15 @@ function draw_start_screen() {
 function draw_game_screen() {
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
-    const paddleWidth = DEV_MODE === 2 || DEV_MODE === 3 ? PADDLE_WIDTH * 1.25 : PADDLE_WIDTH;
-    const paddleHeight = DEV_MODE === 2 || DEV_MODE === 3 ? PADDLE_HEIGHT * 1 : PADDLE_HEIGHT;
+    let paddleWidth = PADDLE_WIDTH;
+    let paddleHeight = PADDLE_HEIGHT;
+
+    if (DEV_MODE === 2 || DEV_MODE === 3) {
+        paddleWidth *= 1.25;
+    }
+    if (DEV_MODE === 2 || DEV_MODE === 3) {
+        paddleHeight *= 1;
+    }
 
     ctx.fillStyle = "blue";
     ctx.fillRect(paddle.x, paddle.y, paddleWidth, paddleHeight);
@@ -137,8 +149,14 @@ function ball_dynamics() {
     ball.x += ball.dx;
     ball.y += ball.dy;
 
-    if (ball.x <= 0 || ball.x >= WIDTH) ball.dx = -ball.dx;
-    if (ball.y <= 0) ball.dy = -ball.dy;
+    if (ball.x <= 0 || ball.x >= WIDTH) {
+        ball.dx = -ball.dx;
+        wallHitSound.play();
+    }
+    if (ball.y <= 0) {
+        ball.dy = -ball.dy;
+        wallHitSound.play();
+    }
     if (ball.y >= HEIGHT) {
         gameOver = true;
         draw_end_screen("Game Over!");
@@ -189,6 +207,7 @@ function detect_brick_collision() {
 
             score += brick.points;
             add_score_bubble(brick.points, brick.color);
+            brickBreakSound.play();
 
             return false;
         }
@@ -215,11 +234,10 @@ function draw_score_bubbles() {
             ctx.beginPath();
             ctx.arc(x, y, BUBBLE_RADIUS, 0, Math.PI * 2);
             ctx.fill();
-            ctx.fillStyle = "white";
-            ctx.font = "20px Helvetica bold";
+            ctx.fillStyle = "black";
+            ctx.font = "20px Arial";
             ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText(bubble.scoreText, x, y);
+            ctx.fillText(bubble.scoreText, x, y + 5);
             return true;
         }
         return false;

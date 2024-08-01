@@ -19,7 +19,7 @@ const BUBBLE_DURATION = 1000;
 const PADDLE_DELAY = 250;
 const PADDLE_WIDTH = 100;
 const PADDLE_HEIGHT = 20;
-const DEV_MODE = 0;
+const DEV_MODE = 2;
 
 let BRICK_ROWS = 5;
 let BRICK_COLS = 10;

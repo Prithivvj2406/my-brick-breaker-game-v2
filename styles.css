@@ -1,36 +1,25 @@
 body {
-    background-color: #8FD3C1;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    margin: 0;
-    overflow: hidden;
-    position: relative;
 }
 
 canvas {
-    background: white;
-    display: block;
+    border: 2px solid #000;
 }
 
-#devModeDiv, #bricksRemainingDiv, #elapsedTimeDiv {
+.dev-info {
     position: absolute;
-    color: black;
-    font-size: 18px;
-}
-
-#devModeDiv {
     top: 10px;
     left: 10px;
-}
-
-#bricksRemainingDiv {
-    top: 10px;
-    right: 10px;
-}
-
-#elapsedTimeDiv {
-    bottom: 10px;
-    left: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+    display: none;
 }

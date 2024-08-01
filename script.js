@@ -24,6 +24,13 @@ const PADDLE_WIDTH = 100;
 const PADDLE_HEIGHT = 20;
 const DEV_MODE = 3; // Set the desired DEV_MODE here
 
+// Sound files
+const bounceWallSound = new Audio('assets/bounce-wall.mp3');
+const bouncePaddleSound = new Audio('assets/bounce-paddle.mp3');
+const breakBrickSound = new Audio('assets/break-brick.mp3');
+const gameOverSound = new Audio('assets/game-over.mp3');
+const winSound = new Audio('assets/win.mp3');
+
 // Brick configuration based on DEV_MODE
 let BRICK_ROWS = 5;
 let BRICK_COLS = 10;
@@ -136,6 +143,12 @@ function draw_end_screen(message) {
     ctx.fillText(message, WIDTH / 2, HEIGHT / 2 - 25);
     ctx.font = "30px Helvetica";
     ctx.fillText(`Score: ${score}`, WIDTH / 2, HEIGHT / 2 + 25);
+
+    if (message === "You Win!") {
+        winSound.play(); // Play win sound
+    } else {
+        gameOverSound.play(); // Play game over sound
+    }
 }
 
 // Move paddle
@@ -155,8 +168,14 @@ function ball_dynamics() {
     ball.y += ball.dy;
 
     // Ball collision with walls
-    if (ball.x <= 0 || ball.x >= WIDTH) ball.dx = -ball.dx;
-    if (ball.y <= 0) ball.dy = -ball.dy;
+    if (ball.x <= 0 || ball.x >= WIDTH) {
+        ball.dx = -ball.dx;
+        bounceWallSound.play(); // Play sound when ball hits a wall
+    }
+    if (ball.y <= 0) {
+        ball.dy = -ball.dy;
+        bounceWallSound.play(); // Play sound when ball hits the top wall
+    }
     if (ball.y >= HEIGHT) {
         gameOver = true;
         draw_end_screen("Game Over!");
@@ -189,6 +208,7 @@ function detect_paddle_collision() {
     ) {
         ball.dy = -ball.dy;
         ball.y = paddle.y - ball.size / 2;
+        bouncePaddleSound.play(); // Play sound when ball hits the paddle
     }
 }
 
@@ -212,6 +232,7 @@ function detect_brick_collision() {
 
             score += brick.points;
             add_score_bubble(brick.points, brick.color);
+            breakBrickSound.play(); // Play sound when brick is broken
 
             return false;
         }
@@ -219,112 +240,58 @@ function detect_brick_collision() {
     });
 }
 
-// Add score bubble
-function add_score_bubble(scoreIncrement, color) {
-    scoreBubbles.push({
-        color: color,
-        scoreText: `+${scoreIncrement}`,
-        startTime: Date.now()
-    });
-}
-
 // Draw score bubbles
 function draw_score_bubbles() {
-    const currentTime = Date.now();
-    scoreBubbles = scoreBubbles.filter(bubble => {
-        const elapsedTime = currentTime - bubble.startTime;
-        if (elapsedTime < BUBBLE_DURATION) {
-            const x = WIDTH - BUBBLE_RADIUS - 20;
-            const y = HEIGHT - BUBBLE_RADIUS - 20;
-            ctx.fillStyle = bubble.color;
-            ctx.beginPath();
-            ctx.arc(x, y, BUBBLE_RADIUS, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = "white";
-            ctx.font = "20px Helvetica bold";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText(bubble.scoreText, x, y);
-            return true;
-        }
-        return false;
+    scoreBubbles.forEach(bubble => {
+        ctx.fillStyle = bubble.color;
+        ctx.beginPath();
+        ctx.arc(bubble.x, bubble.y, BUBBLE_RADIUS, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "white";
+        ctx.font = "20px Helvetica";
+        ctx.textAlign = "center";
+        ctx.fillText(bubble.points, bubble.x, bubble.y + 7);
     });
 }
 
-// Update DEV_MODE display
-function update_dev_mode_display() {
-    const devModeDiv = document.getElementById('devModeDiv');
-    if ((DEV_MODE === 1 || DEV_MODE === 2 || DEV_MODE === 3) && !startScreen) {
-        devModeDiv.textContent = `DEV_MODE: ${DEV_MODE}`;
-        devModeDiv.style.display = 'block';
-    } else {
-        devModeDiv.style.display = 'none';
-    }
-}
+// Add score bubble
+function add_score_bubble(points, color) {
+    scoreBubbles.push({
+        x: ball.x,
+        y: ball.y,
+        points: points,
+        color: color
+    });
 
-// Update bricks remaining display
-function update_bricks_remaining_display() {
-    const bricksRemainingDiv = document.getElementById('bricksRemainingDiv');
-    if ((DEV_MODE === 1 || DEV_MODE === 2 || DEV_MODE === 3) && !startScreen) {
-        bricksRemainingDiv.textContent = `Bricks Remaining: ${bricks.length}`;
-        bricksRemainingDiv.style.display = 'block';
-    } else {
-        bricksRemainingDiv.style.display = 'none';
-    }
-}
-
-// Update elapsed time display
-function update_elapsed_time_display() {
-    const elapsedTimeDiv = document.getElementById('elapsedTimeDiv');
-    if (DEV_MODE === 3 && !startScreen) {
-        const currentTime = Date.now();
-        const elapsedSeconds = ((currentTime - startTime) / 1000).toFixed(3);
-        elapsedTimeDiv.textContent = `Time Elapsed: ${elapsedSeconds}s`;
-        elapsedTimeDiv.style.display = 'block';
-    } else {
-        elapsedTimeDiv.style.display = 'none';
-    }
-}
-
-// Main game loop
-function gameLoop() {
-    if (!startScreen && !gameOver) {
-        if (!startTime) startTime = Date.now();
-        ball_dynamics();
-        draw_game_screen();
-        update_bricks_remaining_display();
-        update_elapsed_time_display();
-        
-        if (bricks.length === 0) {
-            gameOver = true;
-            draw_end_screen("You Win!");
-        }
-    } else if (gameOver) {
-        if (!scoreBubbles.length) {
-            draw_end_screen(gameOver ? "Game Over!" : "You Win!");
-        }
-    }
-    update_dev_mode_display();
     setTimeout(() => {
-        requestAnimationFrame(gameLoop);
-    }, 16);
+        scoreBubbles.shift();
+    }, BUBBLE_DURATION);
 }
 
-// Event listeners
-canvas.addEventListener("mousemove", move_paddle);
+// Update score bubble positions
+function update_score_bubbles() {
+    scoreBubbles.forEach(bubble => {
+        bubble.y -= 1;
+    });
+}
+
+// Start game
 canvas.addEventListener("click", () => {
     if (startScreen) {
         startScreen = false;
-        canvas.removeEventListener("click", draw_start_screen);
+        gameOver = false;
+        startTime = Date.now();
+        draw_game_screen();
+        requestAnimationFrame(game_loop);
     }
 });
 
-// Start the game
-gameIcon.onload = () => {
-    draw_start_screen();
-    gameLoop();
-};
+// Game loop
+function game_loop() {
+    if (gameOver) return;
 
-gameIcon.onerror = () => {
-    console.error('Failed to load game icon image.');
-};
+    ball_dynamics();
+    update_score_bubbles();
+    draw_game_screen();
+    requestAnimationFrame(game_loop);
+}

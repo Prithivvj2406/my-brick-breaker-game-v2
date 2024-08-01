@@ -19,7 +19,7 @@ const BUBBLE_DURATION = 1000;
 const PADDLE_DELAY = 250;
 const PADDLE_WIDTH = 100;
 const PADDLE_HEIGHT = 20;
-const DEV_MODE = 0; // Change to 0, 2, or 3 for different modes
+const DEV_MODE = 1; // Change to 0, 2, or 3 for different modes
 
 let BRICK_ROWS = 5;
 let BRICK_COLS = 10;
@@ -171,8 +171,8 @@ function ball_dynamics() {
 }
 
 function detect_paddle_collision() {
-    const paddleWidth = DEV_MODE === 2 || DEV_MODE === 3 ? PADDLE_WIDTH * 1.2 : PADDLE_WIDTH;
-    const paddleHeight = DEV_MODE === 2 || DEV_MODE === 3 ? PADDLE_HEIGHT * 1.2 : PADDLE_HEIGHT;
+    const paddleWidth = DEV_MODE === 2 || DEV_MODE === 3 ? PADDLE_WIDTH * 1.25 : PADDLE_WIDTH;
+    const paddleHeight = DEV_MODE === 2 || DEV_MODE === 3 ? PADDLE_HEIGHT * 1.25 : PADDLE_HEIGHT;
 
     if (
         ball.y + ball.size / 2 > paddle.y &&
@@ -199,43 +199,30 @@ function detect_brick_collision() {
             } else {
                 ball.dx = -ball.dx;
             }
-
             score += brick.points;
-            add_score_bubble(brick.points, brick.color);
             brickBreakSound.play();
-
             return false;
         }
         return true;
     });
 }
 
-function add_score_bubble(scoreIncrement, color) {
-    scoreBubbles.push({
-        color: color,
-        scoreText: `+${scoreIncrement}`,
-        startTime: Date.now()
-    });
-}
-
 function draw_score_bubbles() {
-    const currentTime = Date.now();
     scoreBubbles = scoreBubbles.filter(bubble => {
-        const elapsedTime = currentTime - bubble.startTime;
-        if (elapsedTime < BUBBLE_DURATION) {
-            const x = WIDTH - BUBBLE_RADIUS - 10;
-            const y = HEIGHT - BUBBLE_RADIUS - 10;
-            ctx.fillStyle = bubble.color;
-            ctx.beginPath();
-            ctx.arc(x, y, BUBBLE_RADIUS, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = "black";
-            ctx.font = "20px Arial";
-            ctx.textAlign = "center";
-            ctx.fillText(bubble.scoreText, x, y + 5);
-            return true;
-        }
-        return false;
+        bubble.duration -= 16;
+        if (bubble.duration <= 0) return false;
+
+        const x = bubble.x;
+        const y = HEIGHT - BUBBLE_RADIUS - 10;
+        ctx.fillStyle = bubble.color;
+        ctx.beginPath();
+        ctx.arc(x, y, BUBBLE_RADIUS, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "black";
+        ctx.font = "20px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText(bubble.scoreText, x, y + 5);
+        return true;
     });
 }
 

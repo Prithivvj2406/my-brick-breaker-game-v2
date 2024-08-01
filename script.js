@@ -25,11 +25,11 @@ const PADDLE_HEIGHT = 20;
 const DEV_MODE = 3; // Set the desired DEV_MODE here
 
 // Sound files
-const bounceWallSound = new Audio('assets/bounce-wall.mp3');
-const bouncePaddleSound = new Audio('assets/bounce-paddle.mp3');
-const breakBrickSound = new Audio('assets/break-brick.mp3');
-const gameOverSound = new Audio('assets/game-over.mp3');
-const winSound = new Audio('assets/win.mp3');
+const bounceWallSound = new Audio('assets/wall_bounce.mp3');
+const bouncePaddleSound = new Audio('assets/paddle_bounce.mp3');
+const breakBrickSound = new Audio('assets/break_brick.mp3');
+const gameOverSound = new Audio('assets/game_over.mp3');
+const winSound = new Audio('assets/win_sound.mp3');
 
 // Brick configuration based on DEV_MODE
 let BRICK_ROWS = 5;

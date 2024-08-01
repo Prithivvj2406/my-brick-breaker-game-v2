@@ -98,20 +98,9 @@ function moveBall() {
     ball.y += ball.dy;
 }
 
-function drawScoreBubble(scoreIncrement, color) {
-    const bubble = document.createElement('div');
-    bubble.id = 'scoreBubble';
-    bubble.style.backgroundColor = color;
-    bubble.textContent = `+${scoreIncrement}`;
-    document.body.appendChild(bubble);
-    setTimeout(() => {
-        document.body.removeChild(bubble);
-    }, 1000);
-}
-
 function updateScore(scoreIncrement, color) {
     score += scoreIncrement;
-    drawScoreBubble(scoreIncrement, color);
+    console.log(`Score: +${scoreIncrement} (Total: ${score})`);
 }
 
 function detectCollisions() {

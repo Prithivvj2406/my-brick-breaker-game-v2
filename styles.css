@@ -1,36 +1,61 @@
 body {
-    background-color: #8FD3C1; /* Light Green */
+    margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    margin: 0;
-    overflow: hidden;
-    position: relative;
+    background-color: #000;
 }
 
-canvas {
-    background: white;
-    display: block;
-}
-
-#devModeDiv, #bricksRemainingDiv, #elapsedTimeDiv {
+#start-screen, #game-screen {
     position: absolute;
-    color: black;
-    font-size: 18px;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-#devModeDiv {
-    top: 10px;
-    left: 10px;
+#start-screen canvas, #game-screen canvas {
+    border: 5px solid #add8e6;
 }
 
-#bricksRemainingDiv {
-    top: 10px;
-    right: 10px;
+#start-screen p {
+    color: white;
+    font-size: 16px;
+    text-align: center;
 }
 
-#elapsedTimeDiv {
-    bottom: 10px;
-    left: 10px;
+#start-screen {
+    display: flex;
+}
+
+#game-screen {
+    display: none;
+}
+
+.score-bubble {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    animation: bubble 1s ease-out forwards;
+}
+
+@keyframes bubble {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
 }

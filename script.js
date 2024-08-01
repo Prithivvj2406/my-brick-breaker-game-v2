@@ -19,7 +19,7 @@ const BUBBLE_DURATION = 1000;
 const PADDLE_DELAY = 250;
 const PADDLE_WIDTH = 100;
 const PADDLE_HEIGHT = 20;
-const DEV_MODE = 2;
+const DEV_MODE = 1; // Change to 0, 2, or 3 for different modes
 
 let BRICK_ROWS = 5;
 let BRICK_COLS = 10;
@@ -27,10 +27,7 @@ let BRICK_COLS = 10;
 if (DEV_MODE === 1) {
     BRICK_ROWS = 1;
     BRICK_COLS = 5;
-} else if (DEV_MODE === 2) {
-    BRICK_ROWS = 5;
-    BRICK_COLS = 10;
-} else if (DEV_MODE === 3) {
+} else if (DEV_MODE === 2 || DEV_MODE === 3) {
     BRICK_ROWS = 5;
     BRICK_COLS = 10;
 }
@@ -101,8 +98,6 @@ function draw_game_screen() {
 
     if (DEV_MODE === 2 || DEV_MODE === 3) {
         paddleWidth *= 1.25;
-    }
-    if (DEV_MODE === 2 || DEV_MODE === 3) {
         paddleHeight *= 1;
     }
 
@@ -228,8 +223,8 @@ function draw_score_bubbles() {
     scoreBubbles = scoreBubbles.filter(bubble => {
         const elapsedTime = currentTime - bubble.startTime;
         if (elapsedTime < BUBBLE_DURATION) {
-            const x = WIDTH - BUBBLE_RADIUS - 20;
-            const y = HEIGHT - BUBBLE_RADIUS - 20;
+            const x = WIDTH - BUBBLE_RADIUS - 10;
+            const y = HEIGHT - BUBBLE_RADIUS - 10;
             ctx.fillStyle = bubble.color;
             ctx.beginPath();
             ctx.arc(x, y, BUBBLE_RADIUS, 0, Math.PI * 2);

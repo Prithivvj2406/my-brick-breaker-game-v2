@@ -22,14 +22,14 @@ const BUBBLE_DURATION = 1000; // Duration for score bubbles
 const PADDLE_DELAY = 250; // Delay in milliseconds for paddle movement in DEV_MODE 2 and 3
 const PADDLE_WIDTH = 100;
 const PADDLE_HEIGHT = 20;
-const DEV_MODE = 0; // Set the desired DEV_MODE here
+const DEV_MODE = 3; // Set the desired DEV_MODE here
 
 // Sound files
-const bounceWallSound = new Audio('assets/wall_bounce.mp3');
-const bouncePaddleSound = new Audio('assets/paddle_bounce.mp3');
-const breakBrickSound = new Audio('assets/brick_break.mp3');
-const gameOverSound = new Audio('assets/game_over.mp3');
-const winSound = new Audio('assets/win_sound.mp3');
+const bounceWallSound = new Audio('assets/bounce-wall.mp3');
+const bouncePaddleSound = new Audio('assets/bounce-paddle.mp3');
+const breakBrickSound = new Audio('assets/break-brick.mp3');
+const gameOverSound = new Audio('assets/game-over.mp3');
+const winSound = new Audio('assets/win.mp3');
 
 // Brick configuration based on DEV_MODE
 let BRICK_ROWS = 5;
@@ -300,4 +300,6 @@ function game_loop() {
 canvas.addEventListener("mousemove", move_paddle);
 
 // Draw start screen initially
-draw_start_screen();
+gameIcon.onload = function() {
+    draw_start_screen();
+};

@@ -27,7 +27,7 @@ const DEV_MODE = 3; // Set the desired DEV_MODE here
 // Sound files
 const bounceWallSound = new Audio('assets/wall_bounce.mp3');
 const bouncePaddleSound = new Audio('assets/paddle_bounce.mp3');
-const breakBrickSound = new Audio('assets/break_brick.mp3');
+const breakBrickSound = new Audio('assets/brick_break.mp3');
 const gameOverSound = new Audio('assets/game_over.mp3');
 const winSound = new Audio('assets/win_sound.mp3');
 
@@ -295,3 +295,9 @@ function game_loop() {
     draw_game_screen();
     requestAnimationFrame(game_loop);
 }
+
+// Handle mouse movement for paddle
+canvas.addEventListener("mousemove", move_paddle);
+
+// Draw start screen initially
+draw_start_screen();
